@@ -1,0 +1,379 @@
+from sys import *
+from math import *
+from turtle import *
+from random import *
+from collections import deque
+from collections import Counter
+
+    
+n= randint(100,200)
+A = [0] * (n)
+for j in range(n):
+    a,b = randint(-500,500),randint(-300,300)
+    A[j] = [a,b]
+#A = [[0, 0], [1, 0], [-2, 0], [5, 0], [-10, 0], [21, 0], [-42, 0], [85, 0], [-170, 0], [341, 0], [-682, 0], [1365, 0]]
+#n=len(A)
+#shuffle(A)
+#Worst_case:
+#absolut:4094(kraskal)(merger)
+#5448(searchs)
+def Kraskals():
+    def make_set(A):
+        parent[A] = A
+        size[A] = 1
+    def find_set(A):
+        if parent[A] == A:
+            return A
+        else:
+            parent[A] = find_set(parent[A])
+        return parent[A]
+    def union_sets(A,B):
+        a1 = find_set(A)
+        b1 = find_set(B)
+        if a1!=b1:
+            #print(a1,b1)
+            #print(a1,b1)
+            if size[a1] < size[b1]:
+                a1,b1 = b1,a1
+            parent[b1] = a1
+            size[a1] += size[b1]
+    parent=dict()
+    size = dict()
+    #def p(A):
+    #    if type(A) == str:
+    #        
+    #        stdout.write(A)
+    #    elif type(A) == int:
+    #        stdout.write(str(A))
+    #    elif type(A) == list:
+    #        stdout.write(' '.join(map(str,A)))
+    
+    edges = []
+    for j in range(n-1):
+        for i in range(j+1,n):
+            edges.append([sqrt((A[j][0] - A[i][0])**2 + (A[j][1] - A[i][1])**2),A[j],A[i]])
+    edges.sort()
+    min_cost = []
+    Edges = dict()
+    queue = deque()
+    def Kraskal():
+        #ht()
+        #speed(0)
+        for j in range(n*(n-1)//2):
+            
+            if str(edges[j][1]) not in size:
+                make_set(str(edges[j][1]))
+            if str(edges[j][2]) not in size:
+                make_set(str(edges[j][2]))
+            if find_set(str(edges[j][1])) != find_set(str(edges[j][2])):
+                min_cost.append(edges[j])
+                if (edges[j][1][0],edges[j][1][1]) in Edges:
+                    Edges[edges[j][1][0],edges[j][1][1]].append(edges[j][2])
+                else:
+                    Edges[edges[j][1][0],edges[j][1][1]] = [edges[j][2]]
+                if (edges[j][2][0], edges[j][2][1]) in Edges:
+                    Edges[edges[j][2][0], edges[j][2][1]].append(edges[j][1])
+                else:
+                    Edges[edges[j][2][0], edges[j][2][1]] = [edges[j][1]]    
+                union_sets(str(edges[j][1]),str(edges[j][2]))
+                
+                
+                
+                
+                #up()
+                #goto(edges[j][1][0],edges[j][1][1])
+                #down()
+                #color('red')
+                #width(5)
+                #dot()
+                #width(1)
+                #color('blue')
+                #goto(edges[j][2][0], edges[j][2][1])
+                #color('red')
+                #width(5)
+                #dot()
+                
+            
+        #exitonclick()
+    Kraskal()
+    first = min_cost[0][1]
+    queue.append(min_cost[0][1])
+    visited = set()
+    now = min_cost[0][1]
+    #visited.add((min_cost[0][1][0],min_cost[0][1][1]))
+    
+    
+    
+    speed(0)
+    ht()
+    up()
+    goto(min_cost[0][1][0],min_cost[0][1][1])
+    down()
+    color('red')
+    width(5)
+    dot()
+    width(1)
+    color('blue')
+    
+    
+    
+    distance = 0
+    cur = ['a', 'a']
+    while queue:
+        last = queue.pop()
+        if (last[0],last[1]) not in visited:
+            visited.add((last[0],last[1]))
+            distance+= sqrt((last[0] - now[0])**2 + (last[1] - now[1])**2)
+            
+            
+            
+            goto(last[0],last[1])
+            color('red')
+            width(5)
+            dot()
+            width(1)
+            color('blue')
+            
+            
+            now = last
+            
+        for j in Edges[last[0],last[1]]:
+            
+            if (j[0],j[1]) not in visited:
+                queue.append([j[0],j[1]])
+                #print(queue)
+                #visited.add((j[0],j[1]))
+                #distance+= sqrt((last[0] - j[0])**2 + (last[1] - j[1])**2)
+                
+    #print(first)
+    goto(first[0],first[1])         
+    exitonclick()
+    
+    
+    
+    
+    #print(min_cost)
+    #print(Edges)
+    #print(visited)
+    distance+= sqrt((first[0] - now[0])**2 + (first[1] - now[1])**2)
+    
+    print('Kraskal : ',end='')
+    print(distance)
+Kraskals()
+
+#/////\\\\\\#
+
+def Search():
+    
+    visited = [0] * (n)
+    now =0
+    visited[0] = 1
+    first = A[0]
+    
+    
+    speed(0)
+    ht()    
+    up()
+    goto(A[0][0],A[0][1])
+    down()
+    width(5)
+    color('red')
+    dot()
+    width(1)
+    color('blue')
+    
+    
+    distance2 = 0
+    for j in range(n-1):
+        mins = float('infinity')
+        for i in range(n):
+            if not visited[i] and mins > sqrt((A[now][0] - A[i][0])**2 + (A[now][1]-A[i][1])**2):
+                mins = sqrt((A[now][0] - A[i][0])**2 + (A[now][1]-A[i][1])**2)
+                cur = i
+        visited[cur] = 1
+        distance2 += sqrt((A[now][0] - A[cur][0])**2+(A[now][1] - A[cur][1])**2)
+        now = cur
+        
+        
+        goto(A[cur][0],A[cur][1])
+        color('red')
+        width(5)
+        dot()
+        width(1)
+        color('blue')
+    goto(first[0],first[1])
+    exitonclick()
+    distance2+= sqrt((first[0] - A[now][0])**2 + (first[1] - A[now][1])**2)
+    print('Searchs : ',end='')
+    print(distance2)
+    
+    
+    #    ['Pen', 'Random', 'RawPen', 'RawTurtle', 'Screen', 'ScrolledCanvas', 'Shape', 'SystemRandom', 'Turtle', 'TurtleScreen', 'Vec2D', '__builtins__', '__doc__', '__file__', '__name__', 'acos', 'acosh', 'addshape', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'back', 'backward', 'begin_fill', 'begin_poly', 'betavariate', 'bgcolor', 'bgpic', 'bk', 'bye', 'ceil', 'choice', 'circle', 'clear', 'clearscreen', 'clearstamp', 'clearstamps', 'clone', 'color', 'colormode', 'copysign', 'cos', 'cosh', 'degrees', 'delay', 'distance', 'done', 'dot', 'down', 'e', 'end_fill', 'end_poly', 'erf', 'erfc', 'exitonclick', 'exp', 'expm1', 'expovariate', 'fabs', 'factorial', 'fd', 'fillcolor', 'filling', 'floor', 'fmod', 'forward', 'frexp', 'fsum', 'gamma', 'gammavariate', 'gauss', 'get_poly', 'get_shapepoly', 'getcanvas', 'getpen', 'getrandbits', 'getscreen', 'getshapes', 'getstate', 'getturtle', 'goto', 'heading', 'hideturtle', 'home', 'ht', 'hypot', 'isdown', 'isfinite', 'isinf', 'isnan', 'isvisible', 'ldexp', 'left', 'lgamma', 'listen', 'log', 'log10', 'log1p', 'log2', 'lognormvariate', 'lt', 'mainloop', 'mode', 'modf', 'normalvariate', 'numinput', 'onclick', 'ondrag', 'onkey', 'onkeypress', 'onkeyrelease', 'onrelease', 'onscreenclick', 'ontimer', 'paretovariate', 'pd', 'pen', 'pencolor', 'pendown', 'pensize', 'penup', 'pi', 'pos', 'position', 'pow', 'pu', 'radians', 'randint', 'random', 'randrange', 'register_shape', 'reset', 'resetscreen', 'resizemode', 'right', 'rt', 'sample', 'screensize', 'seed', 'seth', 'setheading', 'setpos', 'setposition', 'setstate', 'settiltangle', 'setundobuffer', 'setup', 'setworldcoordinates', 'setx', 'sety', 'shape', 'shapesize', 'shapetransform', 'shearfactor', 'showturtle', 'shuffle', 'sin', 'sinh', 'speed', 'sqrt', 'st', 'stamp', 'tan', 'tanh', 'textinput', 'tilt', 'tiltangle', 'title', 'towards', 'tracer', 'triangular', 'trunc', 'turtles', 'turtlesize', 'undo', 'undobufferentries', 'uniform', 'up', 'update', 'vonmisesvariate', 'weibullvariate', 'width', 'window_height', 'window_width', 'write', 'write_docstringdict', 'xcor', 'ycor']
+Search()
+
+#/////\\\\\\#
+
+
+def Mergers():
+    
+    def make_set(A):
+        parent[A] = A
+        size[A] = 1
+        jumps[A] = Counter([A,A])
+    def find_set(A):
+        if parent[A] == A:
+            return A
+        else:
+            parent[A] = find_set(parent[A])
+        return parent[A]
+    def union_sets(A,B):
+        a1 = find_set(A)
+        b1 = find_set(B)
+        if a1!=b1:
+            #print(a1,b1)
+            #print(a1,b1)
+            if size[a1] < size[b1]:
+                a1,b1 = b1,a1
+            parent[b1] = a1
+            size[a1] += size[b1]
+            jumps[a1] = jumps[a1]+jumps[b1]
+            jumps[a1][A] -= 1
+            jumps[a1][B] -= 1
+    parent=dict()
+    size = dict()
+    jumps = dict()
+    edges = []
+    for j in range(n-1):
+        for i in range(j+1,n):
+            edges.append([sqrt((A[j][0] - A[i][0])**2 + (A[j][1] - A[i][1])**2),A[j],A[i]])
+    edges.sort()
+    min_cost = []
+    for j in range(n*(n-1)//2):
+        if str(edges[j][1]) not in size:
+            make_set(str(edges[j][1]))
+        if str(edges[j][2]) not in size:
+            make_set(str(edges[j][2]))
+        if find_set(str(edges[j][1])) != find_set(str(edges[j][2])) and jumps[find_set(str(edges[j][1]))][str(edges[j][1])] != 0 and jumps[find_set(str(edges[j][2]))][str(edges[j][2])]!=0:
+            min_cost.append(edges[j])   
+            union_sets(str(edges[j][1]),str(edges[j][2]))  
+    distance3=0
+    
+
+    
+    def draw_distance(distance3):
+        speed(0)
+        ht()    
+        for j in range(n-1):
+            up()
+            goto(min_cost[j][1][0],min_cost[j][1][1])
+            down()
+            width(5)
+            color('red')
+            dot()
+            color('blue')
+            width(1)
+            goto(min_cost[j][2][0],min_cost[j][2][1])
+            width(5)
+            color('red')
+            dot()
+            color('blue')
+            width(1)        
+            distance3+= sqrt((min_cost[j][1][0] - min_cost[j][2][0])**2+(min_cost[j][1][1]-min_cost[j][2][1])**2)
+        lasts = []
+        for t in jumps[ find_set(str(min_cost[0][1]))]:
+            if jumps[ find_set(str(min_cost[0][1]))][t] == 1:
+                #print (t)        
+                t =t.split(', ')
+                t =[int(t[0][1:]), int(t[1][:-1])]
+                lasts.append(t)
+        #print(lasts)
+        distance3+= sqrt((lasts[0][0] - lasts[1][0])**2+(lasts[0][1]-lasts[1][1])**2)
+        up()
+        goto(lasts[0][0],lasts[0][1])
+        down()
+        goto(lasts[1][0],lasts[1][1])
+                
+        exitonclick() 
+        print('Mergers : ',end= '')
+        print(distance3)  
+    draw_distance(distance3)
+Mergers()
+#300-strings-lulxD-3-solutions
+
+# /////\\\\\\
+def Nearest_Insertion():
+    
+    def distance(x,y):
+        return sqrt((A[x][0] - A[y][0])**2+(A[x][1]-A[y][1])**2)
+    edges = []
+    for j in range(n-1):
+        for i in range(j+1,n):
+            edges.append([sqrt((A[j][0] - A[i][0])**2 + (A[j][1] - A[i][1])**2),j,i])
+    edges.sort()
+    visited = set()
+    curr = 1
+    min_cost = set()
+    visited.add(edges[0][1])
+    visited.add(edges[0][2])
+    min_cost.add((edges[0][1],edges[0][2]))
+    min_cost.add((edges[0][2],edges[0][1]))
+    def draw():
+        distance4 = 0
+        for i,j in min_cost:
+            distance4+= distance(i,j)
+            ht()
+            speed(0)
+            up()
+            goto(A[i][0],A[i][1])
+            down()
+            width(5)
+            color('red')
+            dot()
+            color('blue')
+            width(1)
+            goto(A[j][0],A[j][1])
+            width(5)
+            color('red')
+            dot()
+            
+        
+        print('Inserts : ',end='')
+        print(distance4)
+        exitonclick()
+        
+    for j in range(n-2):
+        for i in range(curr,n*(n-1)//2):
+            if (edges[i][1] in visited and edges[i][2] not in visited):
+                mins = float('infinity')
+                for s1,s2 in min_cost:
+                    if distance(s1,edges[i][2]) +distance(s2,edges[i][2]) - distance(s1,s2)< mins:
+                        mins = distance(s1,edges[i][2]) +distance(s2,edges[i][2]) - distance(s1,s2)
+                        ind1 = s1
+                        ind2 = s2
+                min_cost.discard((ind1,ind2))
+                min_cost.add((ind1,edges[i][2]))
+                min_cost.add((ind2,edges[i][2]))
+                curr+=1
+                visited.add(edges[i][2])
+                #print(edges[i][2])
+                #print(1,s1,s2)
+                #draw()
+                        
+            elif edges[i][1] not in visited and edges[i][2] in visited:
+                
+                mins = float('infinity')
+                for s1,s2 in min_cost:
+                    if distance(s1,edges[i][1]) +distance(s2,edges[i][1]) - distance(s1,s2)< mins:
+                        mins = distance(s1,edges[i][1]) +distance(s2,edges[i][1]) - distance(s1,s2)
+                        ind1 = s1
+                        ind2 = s2
+                min_cost.discard((ind1,ind2))
+                min_cost.add((ind1,edges[i][1]))
+                min_cost.add((ind2,edges[i][1]))        
+                curr+=1
+                visited.add(edges[i][1])
+                #print(edges[i][1])
+                #print(2,s1,s2)
+                #draw()
+    draw()
+Nearest_Insertion()
