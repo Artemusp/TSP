@@ -441,7 +441,7 @@ def Nearest_Merger():
             for s1,s2 in jumps[a1]:
                 for t1,t2 in jumps[b1]:
                     if jumps[a1][(s1,s2)] >=1 and jumps[b1][(t1,t2)] >=1:
-                    # X Y I
+                   
                         if mins > - dist(s1,s2) - dist(t1,t2) + dist(s1,t1) + dist(s2,t2):
                             mins = - dist(s1,s2) - dist(t1,t2) + dist(s1,t1) + dist(s2,t2)
                             ind1 = s1
