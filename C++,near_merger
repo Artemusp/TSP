@@ -1,0 +1,153 @@
+#include <bits/stdc++.h>
+
+
+using namespace std;
+#define mp make_pair
+#define x first
+#define y second
+//int n,m,per,per2,x1,y1,parent,per1,l,distanc,cous,po;
+double inf = 10000007;
+map<int, int > parent;
+map<int,int> sizes;
+map<int, vector< pair<int,int> > > jumps;
+pair<int, int> ex1,ex2;
+int ans1,ans2,ind1,ind2,end1,end2,s1,s2,t1,t2;
+void make_set(int A)
+{
+    parent[A] = A;
+    sizes[A] = 1;
+    jumps[A] = vector<pair<int,int> >(1, mp(A,A));
+}
+int find_set(int A)
+{
+    if(parent[A] == A)
+        return A;
+    else
+        parent[A] = find_set(parent[A]);
+    return parent[A];
+}
+void union_sets(int A, int B)
+{
+    int a1 = find_set(A);
+    int b1 = find_set(B);
+    if(a1!=b1)
+    {
+        if(sizes[a1]<sizes[b1])
+            swap(a1,b1);
+        parent[b1] = a1;
+        sizes[a1]+= sizes[b1];
+        //vector1.insert( vector1.end(), vector2.begin(), vector2.end() );
+        jumps[a1].insert(jumps[a1].end(),jumps[b1].begin(),jumps[b1].end());
+    }
+}
+double dist(vector< pair<int,int> > A,int a,int b)
+{
+    return sqrt(pow(A[a].x - A[b].x,2)+pow(A[a].y-A[b].y,2));
+}
+int valid(int l1, int l2, int l3)
+{
+    for (int j=0;j<jumps[l1].size();j++)
+    {
+        if(jumps[l1][j].x == l2 and jumps[l1][j].y == l3)
+        {
+            return j;
+        }
+    }
+    return -1;
+}
+int main()
+{
+    int n;
+    cin >> n;
+    vector< pair<int,int> > A(n, mp(0,0) );
+    for (int j =0;j<n;j++)
+    {
+        cin >> A[j].x>>A[j].y;
+        //cout << A[j].x << " " << A[j].y<<endl;
+
+    }
+    //sort(A.begin(), A.begin()+n);
+    /*for (int j =0;j<n;j++)
+    {
+        //cin >> A[j].x>>A[j].y;
+        cout << A[j].x << " " << A[j].y<<endl;
+
+    }*/
+    vector < vector<double> > edges(n*(n-1)/2, vector<double>(3));
+    int cou=0;
+    for (int j=0;j<n-1;j++)
+    {
+        for (int i=j+1;i<n;i++)
+        {
+
+            edges[cou][0] = (sqrt(pow(A[j].x - A[i].x,2) +pow((A[j].y - A[i].y),2)));
+            edges[cou][1] = j;
+            edges[cou][2] = i;
+            cou++;
+
+        }
+    }
+    sort(edges.begin(), edges.begin()+n*(n-1)/2);
+    /*for(int j =0;j<n*(n-1)/2;j++)
+    {
+        cout << edges[j][0] << " "<<edges[j][1] << " "<<edges[j][2]<<endl;
+    }*/
+
+    for (int j =0;j<n;j++)
+        make_set(j);
+    for(int j =0;j<n*(n-1)/2;j++)
+    {
+        int b1 = find_set(edges[j][2]);int a1 = find_set(edges[j][1]);
+        //cout << b1 << " " << a1<<endl;
+        if(a1!=b1)
+        {
+            double mins = inf;
+            for (int le1 =0;le1<jumps[a1].size();le1++)
+            {
+                for (int le2=0;le2<jumps[b1].size();le2++)
+                {
+                            s1 = jumps[a1][le1].x;s2=jumps[a1][le1].y;t1 = jumps[b1][le2].x;t2=jumps[b1][le2].y;
+                            ans1 = valid(a1,s1,s2);ans2 = valid(b1,t1,t2);
+                            //cout << ans1 << " " << ans2 << 'f'<<endl;
+                            if (ans1!=-1 and ans2 != -1)
+                            {
+                                //cout << 'lul'<<endl;
+
+
+                                if (mins > - dist(A,s1,s2) - dist(A,t1,t2) + dist(A,s1,t1) + dist(A,s2,t2)){
+                                    mins = - dist(A,s1,s2) - dist(A,t1,t2) + dist(A,s1,t1) + dist(A,s2,t2);
+                                    ind1 = s1;
+                                    ind2 = s2;
+                                    end1 = t1;
+                                    end2 = t2;
+                                    //cout << ind1<<" "<< ind2<<" "<< end1<<" "<< end2<<" "<<endl;
+                                }
+                            }
+
+
+
+
+
+                }
+            }
+            ans1 = valid(a1,ind1,ind2);
+            ans2 = valid(b1, end1, end2);
+            jumps[a1].erase(jumps[a1].begin() + ans1);
+            jumps[b1].erase(jumps[b1].begin() + ans2);
+            jumps[a1].push_back(mp(ind1,end1));
+            jumps[b1].push_back(mp(ind2,end2));
+
+            union_sets(a1,b1);
+        }
+    }
+    ans1 = find_set(0);
+    //cout << ans1<<endl;
+    double answer=0;
+    for( int j=0;j<jumps[ans1].size();j++)
+    {
+        cout << jumps[find_set(0)][j].x << " "<< jumps[find_set(0)][j].y << endl;
+        answer+= dist(A,jumps[find_set(0)][j].x,jumps[find_set(0)][j].y );
+    }
+    cout << answer;
+    return 0;
+}
