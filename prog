@@ -1,0 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp27
+{
+    public class pairs
+    {
+        public double x, y;
+        public pairs(double x,double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
+    public class Buildingobject
+    {
+        Coordinates ctes;
+        Scopes sces;
+        Resolution rces;
+        Geoinfo gces;
+        public long id;
+        public int code,number_of_floors;
+        public string name, district, region,type,functial_name,source_of_financing,status,information,number_of_area,number_of_plan,date,status_of_plan,status_of_object,reason_of_add,reason_of_change,reason_of_delete,parent_objects,children_objects,functual_name_for_portal;
+        public double area;
+        public Buildingobject(string name,string district,string region,string type,pairs coors,pairs[] scopes,string[] resols, string geoinfos,long id,int code,int number_of_floors,string reason_of_add, string )
+
+        {
+            this.id = id;this.code = code;this.number_of_floors = number_of_floors;
+            this.name = name;this.district = district;this.region = region;this.type = type;this.date = date;this.status_of_plan = status_of_plan;
+            this.functial_name = functial_name;this.functual_name_for_portal = functual_name_for_portal;this.reason_of_add = reason_of_add;
+            this.source_of_financing = source_of_financing;this.information = information;this.status_of_object = status_of_object;
+            this.status = status;this.number_of_area = number_of_area;this.number_of_plan = number_of_plan;
+            this.children_objects = children_objects;this.parent_objects = parent_objects;this.reason_of_change = reason_of_change;this.reason_of_delete = reason_of_delete;
+            
+            ctes = new Coordinates(coors);
+            sces = new Scopes(scopes);
+            rces = new Resolution(resols);
+            gces = new Geoinfo(geoinfos);
+            
+        }
+
+        
+    }
+    public class Adress
+    {
+        public string adress;
+    }
+    public class Coordinates
+    {
+
+        public pairs coords;
+        public Coordinates(pairs coords)
+        {
+            this.coords = coords;
+        }
+
+    }
+    public class Scopes
+    {
+
+        public pairs[] scoopes;
+        public Scopes(pairs[] scoopes)
+        {
+            this.scoopes = scoopes;
+        }
+    }
+    public class Resolution
+    {
+        public string[] resolutions;
+        public Resolution(string[] resolutions)
+        {
+            this.resolutions = resolutions;
+        }
+    }
+    public class Geoinfo
+    {
+        public string geoinfo;
+        public Geoinfo(string geoinfo)
+        {
+            this.geoinfo = geoinfo;
+        }
+    }
+    public class Program
+    {
+       
+        static void Main(string[] args)
+        {
+            Buildingobject A = new Buildingobject();
+            
+        }
+    }
+}
